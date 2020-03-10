@@ -6,18 +6,19 @@ import csv
 npzfile = np.load('save.npz')
 mean_x = npzfile['arr_0']
 std_x = npzfile['arr_1']
-print(npzfile)
-print(mean_x)
-print(std_x)
+# print(mean_x)
+# print(std_x)
 
 # testdata = pd.read_csv('gdrive/My Drive/hw1-regression/test.csv', header = None, encoding = 'big5')
 testdata = pd.read_csv('./test.csv', header = None, encoding = 'big5')
 test_data = testdata.iloc[:, 2:]
 test_data[test_data == 'NR'] = 0
 test_data = test_data.to_numpy()
+
 test_x = np.empty([240, 18*9], dtype = float)
 for i in range(240):
-    test_x[i, :] = test_data[18 * i: 18* (i + 1), :].reshape(1, -1)
+    # test_x[i, :] = test_data[18 * i: 18* (i + 1), :].reshape(1, -1)
+    test_x[i, :] = test_data[18 * i: 18 * (i + 1), :].reshape(1, -1)
 for i in range(len(test_x)):
     for j in range(len(test_x[0])):
         if std_x[j] != 0:

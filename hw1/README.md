@@ -5,3 +5,4 @@ Related features:
 
 index 2 : CO
 index 8 : PM10
+index 12: SO2
