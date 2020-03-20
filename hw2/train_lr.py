@@ -61,8 +61,8 @@ w = np.zeros((data_dim,))
 b = np.zeros((1,))
 
 # Some parameters for training    
-max_iter = 10
-batch_size = 8
+max_iter = 20
+batch_size = 16
 learning_rate = 0.2
 
 # Keep the loss and accuracy at every iteration for plotting
