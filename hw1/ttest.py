@@ -8,6 +8,7 @@ mean_x = npzfile['arr_0']
 std_x = npzfile['arr_1']
 # print(mean_x)
 # print(std_x)
+print(mean_x.shape)
 
 # testdata = pd.read_csv('gdrive/My Drive/hw1-regression/test.csv', header = None, encoding = 'big5')
 testdata = pd.read_csv('./test.csv', header = None, encoding = 'big5')
@@ -16,38 +17,51 @@ test_data[test_data == 'NR'] = 0
 test_data = test_data.to_numpy()
 
 print(test_data.shape) # 4320 (240 * 18 feature) * 9h
-# print(test_data)
-test_feat = test_data
-test_feat.reshape(240, -1, 9)
+
+test_data = np.reshape(test_data ,(240, -1, 9))
+print(test_data.shape)
+print(test_data[0].shape)
+
+n = 24
+
+test_feat = np.zeros((240, n, 9), dtype=float) # 
 print(test_feat.shape)
 
 # total 240 days  9h of data per day
 for day in range(240):
-    AMB_TEMP, CH4, CO, NMHC, NO, NO2, NOx, O3, PM10, PM25, RAINFALL, RH, SO2, THC, WD_HR, WIND_DIREC, WIND_SPEED, WS_HR = test_data[day]
-    test_data[day] = np.vstack(
-         [PM25**i for i in range(1, 7)]
-        +[PM10**i for i in range(1, 7)]
-        +[CO**i   for i in range(1, 2)]
-        +[SO2**i  for i in range(1, 2)]
-        +[NO**i   for i in range(1, 2)]
-        +[SO2**i  for i in range(1, 2)]
-        +[O3**i   for i in range(1, 2)]
+    AMB_TEMP, CH4, CO, NMHC, NO, NO2, NOx, O3, PM10, PM25, RAINFALL, RH, SO2, THC, WD_HR, WIND_DIREC, WIND_SPEED, WS_HR = test_data[day].astype(float)
+
+    test_feat[day] = np.vstack( # should be n features
+        [PM25**i for i in range(1,7)]
+        +[PM10**i for i in range(1,7)]
+        # +[AMB_TEMP**i for i in range(1,2)]
+        # +[CH4**i for i in range(1,2)]
+        +[CO**i for i in range(1,4)]
+        +[NMHC**i for i in range(1,2)]
+        +[NO**i for i in range(1,2)]
+        +[NO2**i for i in range(1,2)]
+        +[NOx**i for i in range(1,2)]
+        +[O3**i for i in range(1,2)]
+        # +[RAINFALL**i for i in range(1,2)]
+        # +[RH**i for i in range(1,2)]
+        +[SO2**i for i in range(1,2)]
+        # +[THC**i for i in range(1,2)]
+        +[WD_HR**i for i in range(1,2)]
+        +[WIND_DIREC**i for i in range(1,2)]
+        +[WIND_SPEED**i for i in range(1,2)]
+        # +[WS_HR**i for i in range(1,2)]
     )
 
 print(test_data.shape)
-test_data = test_data.reshape(-1,9)
+test_feat = test_feat.reshape(-1, 9)
 print(test_data.shape)
 
-n = 7
-
-# n_dim = test_data[0].shape
-print(test_data[0].shape)
-
-# test_x = np.empty([240, 18*9], dtype = float)
+# extract n features
 test_x = np.empty([240, n*9], dtype = float)
+print(test_x.shape)
 for i in range(240):
-    # test_x[i, :] = test_data[18 * i: 18* (i + 1), :].reshape(1, -1)
-    test_x[i, :] = test_data[n * i: n * (i + 1), :].reshape(1, -1)
+    test_x[i, :] = test_feat[n * i: n * (i + 1), :].reshape(1, -1)
+
 for i in range(len(test_x)):
     for j in range(len(test_x[0])):
         if std_x[j] != 0:

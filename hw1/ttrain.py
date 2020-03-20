@@ -7,8 +7,6 @@ data = data.iloc[:, 3:]
 data[data == 'NR'] = 0
 raw_data = data.to_numpy()
 
-# print(raw_data)
-
 month_data = {}
 for month in range(12):
     sample = np.empty([18, 480])
@@ -21,14 +19,36 @@ for month in range(12):
 for month in range(12):
     # 0       1    2   3     4   5    6    7   8     9     10        11  12   13   14     15          16          17
     AMB_TEMP, CH4, CO, NMHC, NO, NO2, NOx, O3, PM10, PM25, RAINFALL, RH, SO2, THC, WD_HR, WIND_DIREC, WIND_SPEED, WS_HR = month_data[month]
+
     month_data[month] = np.vstack(
-         [PM25**i for i in range(1, 7)] # index 0
-        +[PM10**i for i in range(1, 7)]
-        +[CO**i   for i in range(1, 2)]
-        +[SO2**i  for i in range(1, 2)]
-        +[NO**i   for i in range(1, 2)]
-        +[SO2**i  for i in range(1, 2)]
-        +[O3**i   for i in range(1, 2)]
+        #  [PM25**i for i in range(1, 7)] # index 0
+        # +[PM10**i for i in range(1, 7)]
+        # +[CO**i   for i in range(1, 2)]
+        # +[SO2**i  for i in range(1, 2)]
+        # +[NO**i   for i in range(1, 2)]
+        # +[O3**i   for i in range(1, 2)]
+        # +[NO**i for i in range(1,2)]
+        # # +[NO2**i for i in range(1,2)]
+        # +[NOx**i for i in range(1,2)]
+
+        [PM25**i for i in range(1,7)]
+        +[PM10**i for i in range(1,7)]
+        # +[AMB_TEMP**i for i in range(1,2)]
+        # +[CH4**i for i in range(1,2)]
+        +[CO**i for i in range(1,4)]
+        +[NMHC**i for i in range(1,2)]
+        +[NO**i for i in range(1,2)]
+        +[NO2**i for i in range(1,2)]
+        +[NOx**i for i in range(1,2)]
+        +[O3**i for i in range(1,2)]
+        # +[RAINFALL**i for i in range(1,2)]
+        # +[RH**i for i in range(1,2)]
+        +[SO2**i for i in range(1,2)]
+        # +[THC**i for i in range(1,2)]
+        +[WD_HR**i for i in range(1,2)]
+        +[WIND_DIREC**i for i in range(1,2)]
+        +[WIND_SPEED**i for i in range(1,2)]
+        # +[WS_HR**i for i in range(1,2)]
     )
 
 n = month_data[0].shape[0]
@@ -48,8 +68,6 @@ for month in range(12):
             x[month * 471 + day * 24 + hour, :] = month_data[month][:,day * 24 + hour : day * 24 + hour + 9].reshape(1, -1) #vector dim:18*9 (9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
             # 0th row,  day * 24 + hour + 9 value
             y[month * 471 + day * 24 + hour, 0] = month_data[month][0, day * 24 + hour + 9] #value
-# print(x)
-# print(y)
 
 print(x.shape)
 
@@ -64,7 +82,7 @@ dim = n * 9 + 1
 w = np.zeros([dim, 1])
 x = np.concatenate((np.ones([12 * 471, 1]), x), axis = 1).astype(float)
 learning_rate = 100
-iter_time = 10000
+iter_time = 20000
 adagrad = np.zeros([dim, 1])
 eps = 0.0000000001
 for t in range(iter_time):

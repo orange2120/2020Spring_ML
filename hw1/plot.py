@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import csv
 
+features = ['AMB_TEMP', 'CH4', 'CO', 'NMHC', 'NO', 'NO2', 'NOx', 'O3', 'PM10', 'PM25', 'RAINFALL', 'RH', 'SO2', 'THC', 'WD_HR', 'WIND_DIREC', 'WIND_SPEED', 'WS_HR' ]
+
 data = pd.read_csv('./train.csv', encoding = 'big5')
 data = data.iloc[:, 3:]
 data[data == 'NR'] = 0
@@ -28,16 +30,24 @@ for i in range(10, 18):
 # print(squ)
 
 plt.xlabel('PM2.5')
+
 x = month_data[0][9]
 for i in range(0, 9):
+    plt.ylabel(features[i])
     print('index={}'.format(i))
     plt.scatter(x, month_data[0][i], s=5)
-    plt.show()
+    plt.savefig('./features/'+ str(features[i]) + '.png')
+    plt.clf()
+    # plt.show()
 
 for i in range(10, 18):
+    plt.ylabel(features[i])
     print('index={}'.format(i))
     plt.scatter(x, month_data[0][i], s=5)
-    plt.show()
+    plt.savefig('./features/'+ str(features[i]) + '.png')
+    plt.clf()
+
+    # plt.show()
 
     # y = month_data[0][1]
 

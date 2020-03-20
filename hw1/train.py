@@ -44,7 +44,7 @@ dim = 18 * 9 + 1
 w = np.zeros([dim, 1])
 x = np.concatenate((np.ones([12 * 471, 1]), x), axis = 1).astype(float)
 learning_rate = 100
-iter_time = 9000
+iter_time = 8500
 adagrad = np.zeros([dim, 1])
 eps = 0.0000000001
 for t in range(iter_time):
