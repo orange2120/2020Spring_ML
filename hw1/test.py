@@ -3,14 +3,19 @@ import pandas as pd
 import numpy as np
 import csv
 
+INPUT_PATH = './test.csv'
+OUTPUT_PATH = './submit.csv'
+
+if len(sys.argv) == 3:
+    INPUT_PATH = sys.argv[1]
+    OUTPUT_PATH = sys.argv[2]
+
 npzfile = np.load('save.npz')
 mean_x = npzfile['arr_0']
 std_x = npzfile['arr_1']
-# print(mean_x)
-# print(std_x)
 
 # testdata = pd.read_csv('gdrive/My Drive/hw1-regression/test.csv', header = None, encoding = 'big5')
-testdata = pd.read_csv('./test.csv', header = None, encoding = 'big5')
+testdata = pd.read_csv(INPUT_PATH, header = None, encoding = 'big5')
 test_data = testdata.iloc[:, 2:]
 test_data[test_data == 'NR'] = 0
 test_data = test_data.to_numpy()
@@ -33,7 +38,7 @@ w = np.load('weight.npy')
 ans_y = np.dot(test_x, w)
 # print(ans_y)
 
-with open('submit.csv', mode='w', newline='') as submit_file:
+with open(OUTPUT_PATH, mode='w', newline='') as submit_file:
     csv_writer = csv.writer(submit_file)
     header = ['id', 'value']
     print(header)

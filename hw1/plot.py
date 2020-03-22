@@ -29,10 +29,12 @@ for i in range(10, 18):
 '''
 # print(squ)
 
-plt.xlabel('PM2.5')
+
 
 x = month_data[0][9]
 for i in range(0, 9):
+    plt.title('PM2.5 - '+features[i])
+    plt.xlabel('PM2.5')
     plt.ylabel(features[i])
     print('index={}'.format(i))
     plt.scatter(x, month_data[0][i], s=5)
@@ -41,6 +43,8 @@ for i in range(0, 9):
     # plt.show()
 
 for i in range(10, 18):
+    plt.title('PM2.5 - '+features[i])
+    plt.xlabel('PM2.5')
     plt.ylabel(features[i])
     print('index={}'.format(i))
     plt.scatter(x, month_data[0][i], s=5)

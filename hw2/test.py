@@ -4,6 +4,11 @@ import util as u
 X_test_fpath = './data/X_test'
 output_fpath = './output_{}.csv'
 
+npzfile = np.load('save.npz')
+w = npzfile['arr_0']
+b = npzfile['arr_1']
+
+
 with open(X_test_fpath) as f:
     next(f)
     X_test = np.array([line.strip('\n').split(',')[1:] for line in f], dtype = float)

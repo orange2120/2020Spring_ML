@@ -128,3 +128,6 @@ plt.title('Accuracy')
 plt.legend(['train', 'dev'])
 plt.savefig('acc.png')
 plt.show()
+
+# save w, b
+np.savez('save.npz', w, b)

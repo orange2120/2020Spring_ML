@@ -2,6 +2,7 @@
 
 Increasing predict accuracy by extract related features.
 
+Run `plot.py` to plot other features versus PM2.5 data.
 More related features:
 
 index 2 : CO
@@ -12,4 +13,3 @@ index 8 : PM10
 
 index 12: SO2
 ![SO2](features/SO2.png)
-

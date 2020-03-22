@@ -95,6 +95,6 @@ for t in range(iter_time):
 np.save('tweight.npy', w)
 
 # save normalized x data
-np.savez('tsave.npz', mean_x, std_x)
+np.savez('best_save.npz', mean_x, std_x)
 # print(mean_x)
 # print(std_x)

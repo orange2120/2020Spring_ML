@@ -3,15 +3,19 @@ import pandas as pd
 import numpy as np
 import csv
 
-npzfile = np.load('tsave.npz')
+INPUT_PATH = './best_test.csv'
+OUTPUT_PATH = './best_submit.csv'
+
+if len(sys.argv) == 3:
+    INPUT_PATH = sys.argv[1]
+    OUTPUT_PATH = sys.argv[2]
+
+npzfile = np.load('best_save.npz')
 mean_x = npzfile['arr_0']
 std_x = npzfile['arr_1']
-# print(mean_x)
-# print(std_x)
-print(mean_x.shape)
 
 # testdata = pd.read_csv('gdrive/My Drive/hw1-regression/test.csv', header = None, encoding = 'big5')
-testdata = pd.read_csv('./test.csv', header = None, encoding = 'big5')
+testdata = pd.read_csv(INPUT_PATH, header = None, encoding = 'big5')
 test_data = testdata.iloc[:, 2:]
 test_data[test_data == 'NR'] = 0
 test_data = test_data.to_numpy()
@@ -69,11 +73,11 @@ for i in range(len(test_x)):
 test_x = np.concatenate((np.ones([240, 1]), test_x), axis = 1).astype(float)
 # print(test_x)
 
-w = np.load('tweight.npy')
+w = np.load('best_weight.npy')
 ans_y = np.dot(test_x, w)
 # print(ans_y)
 
-with open('tsubmit.csv', mode='w', newline='') as submit_file:
+with open(OUTPUT_PATH, mode='w', newline='') as submit_file:
     csv_writer = csv.writer(submit_file)
     header = ['id', 'value']
     print(header)
