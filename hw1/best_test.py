@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import csv
 
-INPUT_PATH = './best_test.csv'
+INPUT_PATH = './test.csv'
 OUTPUT_PATH = './best_submit.csv'
 
 if len(sys.argv) == 3:
@@ -26,7 +26,7 @@ test_data = np.reshape(test_data ,(240, -1, 9))
 print(test_data.shape)
 print(test_data[0].shape)
 
-n = 24
+n = 21 # needs to be adjusted according to selected features
 
 test_feat = np.zeros((240, n, 9), dtype=float) # 
 print(test_feat.shape)
@@ -41,18 +41,18 @@ for day in range(240):
         # +[AMB_TEMP**i for i in range(1,2)]
         # +[CH4**i for i in range(1,2)]
         +[CO**i for i in range(1,4)]
-        +[NMHC**i for i in range(1,2)]
+        # +[NMHC**i for i in range(1,2)]
         +[NO**i for i in range(1,2)]
         +[NO2**i for i in range(1,2)]
         +[NOx**i for i in range(1,2)]
-        +[O3**i for i in range(1,2)]
+        +[O3**i for i in range(1,3)]
         # +[RAINFALL**i for i in range(1,2)]
         # +[RH**i for i in range(1,2)]
-        +[SO2**i for i in range(1,2)]
+        +[SO2**i for i in range(1,3)]
         # +[THC**i for i in range(1,2)]
-        +[WD_HR**i for i in range(1,2)]
-        +[WIND_DIREC**i for i in range(1,2)]
-        +[WIND_SPEED**i for i in range(1,2)]
+        # +[WD_HR**i for i in range(1,2)]
+        # +[WIND_DIREC**i for i in range(1,2)]
+        # +[WIND_SPEED**i for i in range(1,2)]
         # +[WS_HR**i for i in range(1,2)]
     )
 

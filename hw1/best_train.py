@@ -21,33 +21,23 @@ for month in range(12):
     AMB_TEMP, CH4, CO, NMHC, NO, NO2, NOx, O3, PM10, PM25, RAINFALL, RH, SO2, THC, WD_HR, WIND_DIREC, WIND_SPEED, WS_HR = month_data[month]
 
     month_data[month] = np.vstack(
-        #  [PM25**i for i in range(1, 7)] # index 0
-        # +[PM10**i for i in range(1, 7)]
-        # +[CO**i   for i in range(1, 2)]
-        # +[SO2**i  for i in range(1, 2)]
-        # +[NO**i   for i in range(1, 2)]
-        # +[O3**i   for i in range(1, 2)]
-        # +[NO**i for i in range(1,2)]
-        # # +[NO2**i for i in range(1,2)]
-        # +[NOx**i for i in range(1,2)]
-
-        [PM25**i for i in range(1,7)]
+        [PM25**i for i in range(1,7)] # index 0
         +[PM10**i for i in range(1,7)]
         # +[AMB_TEMP**i for i in range(1,2)]
         # +[CH4**i for i in range(1,2)]
         +[CO**i for i in range(1,4)]
-        +[NMHC**i for i in range(1,2)]
+        # +[NMHC**i for i in range(1,2)]
         +[NO**i for i in range(1,2)]
         +[NO2**i for i in range(1,2)]
         +[NOx**i for i in range(1,2)]
         +[O3**i for i in range(1,2)]
         # +[RAINFALL**i for i in range(1,2)]
         # +[RH**i for i in range(1,2)]
-        +[SO2**i for i in range(1,2)]
+        +[SO2**i for i in range(1,3)]
         # +[THC**i for i in range(1,2)]
-        +[WD_HR**i for i in range(1,2)]
-        +[WIND_DIREC**i for i in range(1,2)]
-        +[WIND_SPEED**i for i in range(1,2)]
+        # +[WD_HR**i for i in range(1,2)]
+        # +[WIND_DIREC**i for i in range(1,2)]
+        # +[WIND_SPEED**i for i in range(1,2)]
         # +[WS_HR**i for i in range(1,2)]
     )
 
@@ -92,7 +82,7 @@ for t in range(iter_time):
     gradient = 2 * np.dot(x.transpose(), np.dot(x, w) - y) #dim*1
     adagrad += gradient ** 2
     w = w - learning_rate * gradient / np.sqrt(adagrad + eps)
-np.save('tweight.npy', w)
+np.save('best_weight.npy', w)
 
 # save normalized x data
 np.savez('best_save.npz', mean_x, std_x)

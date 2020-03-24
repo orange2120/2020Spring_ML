@@ -1,5 +1,6 @@
-# Linear regression
+# Linear regression - train
 
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import util as u
@@ -9,6 +10,12 @@ X_train_fpath = './data/X_train'
 Y_train_fpath = './data/Y_train'
 X_test_fpath = './data/X_test'
 output_fpath = './output_{}.csv'
+
+if len(sys.argv) == 7:
+    X_train_fpath = sys.argv[3]
+    Y_train_fpath = sys.argv[4]
+    X_test_fpath = sys.argv[5]
+    output_fpath = sys.argv[6]
 
 # Parse csv files to numpy array
 with open(X_train_fpath) as f:
@@ -31,7 +38,7 @@ print('Splitting data...\n')
 # Normalize training and testing data
 X_train, X_mean, X_std = u._normalize(X_train, train = True)
 X_test, _, _= u._normalize(X_test, train = False, specified_column = None, X_mean = X_mean, X_std = X_std)
-    
+
 # Split data into training set and development set
 dev_ratio = 0.1
 X_train, Y_train, X_dev, Y_dev = _train_dev_split(X_train, Y_train, dev_ratio = dev_ratio)
@@ -45,16 +52,7 @@ print('Size of development set: {}'.format(dev_size))
 print('Size of testing set: {}'.format(test_size))
 print('Dimension of data: {}'.format(data_dim))
 
-np.random.seed(0)
-X_train_fpath = './data/X_train'
-Y_train_fpath = './data/Y_train'
-X_test_fpath = './data/X_test'
-output_fpath = './output_{}.csv'
-
-train_size = X_train.shape[0]
-dev_size = X_dev.shape[0]
-test_size = X_test.shape[0]
-data_dim = X_train.shape[1]
+print('train shape= {}'.format(X_train.shape))
 
 # Zero initialization for weights ans bias
 w = np.zeros((data_dim,)) 
@@ -62,7 +60,7 @@ b = np.zeros((1,))
 
 # Some parameters for training    
 max_iter = 20
-batch_size = 16
+batch_size = 8
 learning_rate = 0.2
 
 # Keep the loss and accuracy at every iteration for plotting
@@ -118,7 +116,7 @@ plt.plot(train_loss)
 plt.plot(dev_loss)
 plt.title('Loss')
 plt.legend(['train', 'dev'])
-plt.savefig('loss.png')
+plt.savefig('./figure/loss_lr.png')
 plt.show()
 
 # Accuracy curve
@@ -126,8 +124,8 @@ plt.plot(train_acc)
 plt.plot(dev_acc)
 plt.title('Accuracy')
 plt.legend(['train', 'dev'])
-plt.savefig('acc.png')
+plt.savefig('./figure/acc_lr.png')
 plt.show()
 
 # save w, b
-np.savez('save.npz', w, b)
+np.savez('save_lr.npz', X_test, w, b)

@@ -1,4 +1,5 @@
-# Generative model
+# Generative model - train
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import util as u
@@ -8,6 +9,12 @@ X_train_fpath = './data/X_train'
 Y_train_fpath = './data/Y_train'
 X_test_fpath = './data/X_test'
 output_fpath = './output_{}.csv'
+
+if len(sys.argv) == 7:
+    X_train_fpath = sys.argv[3]
+    Y_train_fpath = sys.argv[4]
+    X_test_fpath = sys.argv[5]
+    output_fpath = sys.argv[6]
 
 # Parse csv files to numpy array
 with open(X_train_fpath) as f:
@@ -58,17 +65,22 @@ b =  (-0.5) * np.dot(mean_0, np.dot(inv, mean_0)) + 0.5 * np.dot(mean_1, np.dot(
 Y_train_pred = 1 - u._predict(X_train, w, b)
 print('Training accuracy: {}'.format(u._accuracy(Y_train_pred, Y_train)))
 
-# Predict testing labels
-predictions = 1 - u._predict(X_test, w, b)
-with open(output_fpath.format('generative'), 'w') as f:
-    f.write('id,label\n')
-    for i, label in  enumerate(predictions):
-        f.write('{},{}\n'.format(i, label))
+# save w, b
+np.savez('save_gn.npz', X_test, w, b)
 
-# Print out the most significant weights
-ind = np.argsort(np.abs(w))[::-1]
-with open(X_test_fpath) as f:
-    content = f.readline().strip('\n').split(',')
-features = np.array(content)
-for i in ind[0:10]:
-    print(features[i], w[i])
+# # Plot
+# # Loss curve
+# plt.plot(train_loss)
+# plt.plot(dev_loss)
+# plt.title('Loss')
+# plt.legend(['train', 'dev'])
+# plt.savefig('loss_gn.png')
+# plt.show()
+
+# # Accuracy curve
+# plt.plot(train_acc)
+# plt.plot(dev_acc)
+# plt.title('Accuracy')
+# plt.legend(['train', 'dev'])
+# plt.savefig('acc_gn.png')
+# plt.show()

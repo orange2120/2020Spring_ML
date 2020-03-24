@@ -1,2 +1,5 @@
 __pycache__/
 hw2/data/
+
+*.npz
+*.npy
