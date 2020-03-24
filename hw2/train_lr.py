@@ -9,13 +9,11 @@ np.random.seed(0)
 X_train_fpath = './data/X_train'
 Y_train_fpath = './data/Y_train'
 X_test_fpath = './data/X_test'
-output_fpath = './output_{}.csv'
 
-if len(sys.argv) == 7:
+if len(sys.argv) == 4:
     X_train_fpath = sys.argv[3]
     Y_train_fpath = sys.argv[4]
     X_test_fpath = sys.argv[5]
-    output_fpath = sys.argv[6]
 
 # Parse csv files to numpy array
 with open(X_train_fpath) as f:
