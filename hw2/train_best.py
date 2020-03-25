@@ -41,16 +41,25 @@ print('Splitting data...\n')
 X_train, X_mean, X_std = u._normalize(X_train, train = True)
 X_test, _, _= u._normalize(X_test, train = False, specified_column = None, X_mean = X_mean, X_std = X_std)
 
+corr = abs(np.corrcoef(X_train.T, Y_train)[-1,:-1]) > 0.05
+print(corr.shape)
+
+X_train = X_train[:, corr]
+X_test = X_test[:, corr]
+#X_dev = X_dev[:, corr]
+data_dim = X_train.shape[1]
+
 dev_ratio = 0.1
 # X_train, Y_train, X_dev, Y_dev = _train_dev_split(X_train, Y_train, dev_ratio = dev_ratio)
 
 np.save('save_best.npy', X_test)
 
 model = Sequential()
-model.add(Dense(120, input_dim=510, activation='relu'))
+model.add(Dense(120, input_dim=data_dim, activation='relu'))
 model.add(Dropout(0.2))
+model.add(Dense(60, activation='relu'))
 # model.add(Dense(60, activation='relu', activity_regularizer=l1(0.001)))
-model.add(Dense(60, activation='relu', kernel_regularizer=L1L2(l1=0.0, l2=0.1)))
+# model.add(Dense(60, activation='relu', kernel_regularizer=L1L2(l1=0.0, l2=0.1)))
 model.add(Dropout(0.2))
 model.add(Dense(1, activation='sigmoid'))
 
