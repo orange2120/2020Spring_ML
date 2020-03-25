@@ -14,6 +14,9 @@ Loss plot
 Accuracy plot
 ![Accuracy](figure/acc_lr.png)
 
+Method to increase accuracy:
+1. extract features by correlation coefficient.
+
 ## Part 2 - Porbabilistic generative model
 `train_gn.py`  
 `test_gn.py`  

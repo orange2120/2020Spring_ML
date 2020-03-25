@@ -26,11 +26,6 @@ with open(X_test_fpath) as f:
     next(f)
     X_test = np.array([line.strip('\n').split(',')[1:] for line in f], dtype = float)
 
-def _train_dev_split(X, Y, dev_ratio = 0.25):
-    # This function spilts data into training set and development set.
-    train_size = int(len(X) * (1 - dev_ratio))
-    return X[:train_size], Y[:train_size], X[train_size:], Y[train_size:]
-
 print('Splitting data...\n')
 
 # Normalize training and testing data
@@ -39,7 +34,15 @@ X_test, _, _= u._normalize(X_test, train = False, specified_column = None, X_mea
 
 # Split data into training set and development set
 dev_ratio = 0.1
-X_train, Y_train, X_dev, Y_dev = _train_dev_split(X_train, Y_train, dev_ratio = dev_ratio)
+X_train, Y_train, X_dev, Y_dev = u._train_dev_split(X_train, Y_train, dev_ratio = dev_ratio)
+
+# extract features
+corr = abs(np.corrcoef(X_train.T, Y_train)[-1,:-1]) > 0.05
+print(corr.shape)
+
+X_train = X_train[:, corr]
+X_test = X_test[:, corr]
+X_dev = X_dev[:, corr]
 
 train_size = X_train.shape[0]
 dev_size = X_dev.shape[0]
@@ -57,9 +60,9 @@ w = np.zeros((data_dim,))
 b = np.zeros((1,))
 
 # Some parameters for training    
-max_iter = 20
+max_iter = 50
 batch_size = 8
-learning_rate = 0.2
+learning_rate = 0.11
 
 # Keep the loss and accuracy at every iteration for plotting
 train_loss = []
