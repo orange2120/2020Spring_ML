@@ -77,4 +77,7 @@ def _normalize(X, train = True, specified_column = None, X_mean = None, X_std = 
         
     return X, X_mean, X_std
 
-# def _mapFeature():
+def _train_dev_split(X, Y, dev_ratio = 0.25):
+    # This function spilts data into training set and development set.
+    train_size = int(len(X) * (1 - dev_ratio))
+    return X[:train_size], Y[:train_size], X[train_size:], Y[train_size:]
