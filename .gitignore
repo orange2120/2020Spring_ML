@@ -3,5 +3,9 @@ __pycache__/
 data/*
 hw2/data/
 
+# python save files
 *.npz
 *.npy
+
+# model files
+*.h5

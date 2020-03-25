@@ -10,9 +10,9 @@ TRAIN_EPOCHES = 20
 TRAIN_BATCH_SIZE = 16
 
 np.random.seed(0)
-X_train_fpath = './data/X_train'
+X_train_fpath = './data/X_train_m'
 Y_train_fpath = './data/Y_train'
-X_test_fpath = './data/X_test'
+X_test_fpath = './data/X_test_m'
 
 if len(sys.argv) == 4:
     X_train_fpath = sys.argv[3]
@@ -46,13 +46,12 @@ print(corr.shape)
 
 X_train = X_train[:, corr]
 X_test = X_test[:, corr]
-#X_dev = X_dev[:, corr]
 data_dim = X_train.shape[1]
 
 dev_ratio = 0.1
 # X_train, Y_train, X_dev, Y_dev = _train_dev_split(X_train, Y_train, dev_ratio = dev_ratio)
 
-np.save('save_best.npy', X_test)
+np.save('save_keras_m.npy', X_test)
 
 model = Sequential()
 model.add(Dense(120, input_dim=data_dim, activation='relu'))
