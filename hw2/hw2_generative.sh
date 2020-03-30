@@ -6,5 +6,5 @@ if [ $# != 6 ]; then
     exit 1
 fi
 
-python3.7 traing_gn.py $3 $4 $5 $6
-python3.7 test_gn.py $5 $6
+python3 traing_gn.py $3 $4 $5 $6
+python3 test_gn.py $5 $6

@@ -6,4 +6,4 @@ fi
 
 echo "Input file: " $1
 echo "Output file: " $2
-python3.7 test.py $1 $2
+python3 test.py $1 $2

@@ -6,6 +6,7 @@ hw2/data/
 # python save files
 *.npz
 *.npy
+*.pkl
 
 # model files
 *.h5
