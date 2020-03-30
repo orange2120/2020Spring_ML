@@ -88,19 +88,3 @@ print('Training accuracy: {}'.format(ut._accuracy(Y_train_pred, Y_train)))
 # save w, b
 np.savez('save_gn.npz', X_test, w, b)
 
-# # Plot
-# # Loss curve
-# plt.plot(train_loss)
-# plt.plot(dev_loss)
-# plt.title('Loss')
-# plt.legend(['train', 'dev'])
-# plt.savefig('loss_gn.png')
-# plt.show()
-
-# # Accuracy curve
-# plt.plot(train_acc)
-# plt.plot(dev_acc)
-# plt.title('Accuracy')
-# plt.legend(['train', 'dev'])
-# plt.savefig('acc_gn.png')
-# plt.show()

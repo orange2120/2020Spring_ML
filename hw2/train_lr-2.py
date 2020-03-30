@@ -37,12 +37,12 @@ dev_ratio = 0.1
 X_train, Y_train, X_dev, Y_dev = u._train_dev_split(X_train, Y_train, dev_ratio = dev_ratio)
 
 # extract features
-corr = abs(np.corrcoef(X_train.T, Y_train)[-1,:-1]) > 0.05
-print(corr.shape)
+# corr = abs(np.corrcoef(X_train.T, Y_train)[-1,:-1]) > 0.05
+# print(corr.shape)
 
-X_train = X_train[:, corr]
-X_test = X_test[:, corr]
-X_dev = X_dev[:, corr]
+# X_train = X_train[:, corr]
+# X_test = X_test[:, corr]
+# X_dev = X_dev[:, corr]
 
 train_size = X_train.shape[0]
 dev_size = X_dev.shape[0]
@@ -60,9 +60,9 @@ w = np.zeros((data_dim,))
 b = np.zeros((1,))
 
 # Some parameters for training    
-max_iter = 50
-batch_size = 8
-learning_rate = 0.11
+max_iter = 100
+batch_size = 48
+learning_rate = 0.005
 
 # Keep the loss and accuracy at every iteration for plotting
 train_loss = []
@@ -118,6 +118,7 @@ plt.plot(dev_loss)
 plt.title('Loss')
 plt.legend(['train', 'dev'])
 plt.savefig('./figure/loss_lr-2.png')
+plt.clf()
 # plt.show()
 
 # Accuracy curve
@@ -126,6 +127,7 @@ plt.plot(dev_acc)
 plt.title('Accuracy')
 plt.legend(['train', 'dev'])
 plt.savefig('./figure/acc_lr-2.png')
+plt.clf()
 # plt.show()
 
 # save w, b

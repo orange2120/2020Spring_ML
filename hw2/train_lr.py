@@ -118,7 +118,8 @@ plt.plot(dev_loss)
 plt.title('Loss')
 plt.legend(['train', 'dev'])
 plt.savefig('./figure/loss_lr.png')
-plt.show()
+# plt.show()
+plt.clf()
 
 # Accuracy curve
 plt.plot(train_acc)
@@ -126,7 +127,8 @@ plt.plot(dev_acc)
 plt.title('Accuracy')
 plt.legend(['train', 'dev'])
 plt.savefig('./figure/acc_lr.png')
-plt.show()
+# plt.show()
+plt.clf()
 
 # save w, b
 np.savez('save_lr.npz', X_test, w, b)
