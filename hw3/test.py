@@ -7,13 +7,24 @@ import torch.nn as nn
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader, Dataset
 import time
+from myModel import Classifier, ImgDataset
 
 batch_size = 128
 
-loadfile = np.load('../data/data.npz')
+model_path = './data/model.pkl'
+
+if len(sys.argv) == 2:
+    model_path = sys.argv[1]
+
+loadfile = np.load('../data/food-11/data.npz')
 test_x = loadfile['te_x']
 
-model_best = torch.load('./model.pkl')
+model_best = torch.load(model_path)
+
+test_transform = transforms.Compose([
+    transforms.ToPILImage(),                                    
+    transforms.ToTensor(),
+])
 
 test_set = ImgDataset(test_x, transform=test_transform)
 test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
@@ -28,7 +39,9 @@ with torch.no_grad():
             prediction.append(y)
 
 #將結果寫入 csv 檔
-with open("predict.csv", 'w') as f:
+with open('./output/predict_' + model_path + '.csv', 'w') as f:
     f.write('Id,Category\n')
     for i, y in  enumerate(prediction):
         f.write('{},{}\n'.format(i, y))
+
+print('predict file: predict_' + model_path + '.csv generated.')

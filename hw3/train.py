@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 import cv2
 import torch
 import torch.nn as nn
-# import torchvision
 import torchvision.transforms as transforms
 import pandas as pd
 from torch.utils.data import DataLoader, Dataset
 import time
+from myModel import Classifier, ImgDataset
 
-num_epoch = 15
-batch_size = 128
+num_epoch = 30
+batch_size = 96
 
-loadfile = np.load('../data/data.npz')
+loadfile = np.load('../data/food-11/data.npz')
 train_x = loadfile['tr_x']
 train_y = loadfile['tr_y']
 val_x = loadfile['val_x']
@@ -31,84 +31,11 @@ test_transform = transforms.Compose([
     transforms.ToPILImage(),                                    
     transforms.ToTensor(),
 ])
-class ImgDataset(Dataset):
-    def __init__(self, x, y=None, transform=None):
-        self.x = x
-        # label is required to be a LongTensor
-        self.y = y
-        if y is not None:
-            self.y = torch.LongTensor(y)
-        self.transform = transform
-    def __len__(self):
-        return len(self.x)
-    def __getitem__(self, index):
-        X = self.x[index]
-        if self.transform is not None:
-            X = self.transform(X)
-        if self.y is not None:
-            Y = self.y[index]
-            return X, Y
-        else:
-            return X
-
 
 train_set = ImgDataset(train_x, train_y, train_transform)
 val_set = ImgDataset(val_x, val_y, test_transform)
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False)
-
-class Classifier(nn.Module):
-    def __init__(self):
-        super(Classifier, self).__init__()
-        #torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
-        #torch.nn.MaxPool2d(kernel_size, stride, padding)
-        #input 維度 [3, 128, 128]
-        self.cnn = nn.Sequential(
-            nn.Conv2d(3, 64, 3, 1, 1),  # [64, 128, 128]
-            nn.BatchNorm2d(64),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2, 0),      # [64, 64, 64]
-
-            nn.Dropout(0.2),
-
-            nn.Conv2d(64, 128, 3, 1, 1), # [128, 64, 64]
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2, 0),      # [128, 32, 32]
-
-            nn.Dropout(0.2),
-
-            nn.Conv2d(128, 256, 3, 1, 1), # [256, 32, 32]
-            nn.BatchNorm2d(256),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2, 0),      # [256, 16, 16]
-
-            nn.Dropout(0.2),
-
-            nn.Conv2d(256, 512, 3, 1, 1), # [512, 16, 16]
-            nn.BatchNorm2d(512),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2, 0),       # [512, 8, 8]
-
-            nn.Dropout(0.2),
-            
-            nn.Conv2d(512, 512, 3, 1, 1), # [512, 8, 8]
-            nn.BatchNorm2d(512),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2, 0),       # [512, 4, 4]
-        )
-        self.fc = nn.Sequential(
-            nn.Linear(512*4*4, 1024),
-            nn.ReLU(),
-            nn.Linear(1024, 512),
-            nn.ReLU(),
-            nn.Linear(512, 11)
-        )
-
-    def forward(self, x):
-        out = self.cnn(x)
-        out = out.view(out.size()[0], -1)
-        return self.fc(out)
 
 model = Classifier().cuda()
 loss = nn.CrossEntropyLoss() # 因為是 classification task，所以 loss 使用 CrossEntropyLoss
@@ -196,7 +123,9 @@ for epoch in range(num_epoch):
       (epoch + 1, num_epoch, time.time()-epoch_start_time, \
       train_acc/train_val_set.__len__(), train_loss/train_val_set.__len__()))
 
-torch.save(model_best, './model.pkl') # save model
+timestr = time.strftime("%Y%m%d-%H-%M-%S")
+
+torch.save(model_best, './data/model_' + timestr + '.pkl') # save model
 
 # Plot
 # Loss curve
@@ -205,7 +134,7 @@ plt.plot(val_loss_his)
 plt.plot(train_val_loss_his)
 plt.title('Loss')
 plt.legend(['train', 'val', 'train-val'])
-plt.savefig('./figure/loss.png')
+plt.savefig('./figure/loss_' + timestr + '.png')
 # plt.show()
 plt.clf()
 
@@ -215,6 +144,6 @@ plt.plot(val_acc_his)
 plt.plot(train_val_acc_his)
 plt.title('Accuracy')
 plt.legend(['train', 'val', 'train-val'])
-plt.savefig('./figure/accuracy.png')
+plt.savefig('./figure/accuracy_' + timestr + '.png')
 # plt.show()
 plt.clf()
