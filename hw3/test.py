@@ -39,9 +39,12 @@ with torch.no_grad():
             prediction.append(y)
 
 #將結果寫入 csv 檔
-with open('./output/predict_' + model_path + '.csv', 'w') as f:
+
+output_name = os.path.splitext(os.path.basename(model_path))[0]
+
+with open('./output/predict_' + output_name + '.csv', 'w') as f:
     f.write('Id,Category\n')
     for i, y in  enumerate(prediction):
         f.write('{},{}\n'.format(i, y))
 
-print('predict file: predict_' + model_path + '.csv generated.')
+print('predict file: predict_' + output_name + '.csv generated.')

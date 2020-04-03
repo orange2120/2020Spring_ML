@@ -10,8 +10,13 @@ from torch.utils.data import DataLoader, Dataset
 import time
 from myModel import Classifier, ImgDataset
 
-num_epoch = 30
+num_epoch = 60
 batch_size = 96
+
+def adjust_learning_rate(optimizer, lr):
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
+
 
 loadfile = np.load('../data/food-11/data.npz')
 train_x = loadfile['tr_x']
@@ -48,12 +53,22 @@ val_loss_his = []
 train_acc_his = []
 val_acc_his = []
 
+lr = 0.01
+
 for epoch in range(num_epoch):
     epoch_start_time = time.time()
     train_acc = 0.0
     train_loss = 0.0
     val_acc = 0.0
     val_loss = 0.0
+
+    if epoch < 15:
+        lr = 0.004
+    elif epoch < 30:
+        lr = 0.001
+    else:
+        lr = 5E-4
+    adjust_learning_rate(optimizer, lr)
 
     model.train() # 確保 model 是在 train model (開啟 Dropout 等...)
     for i, data in enumerate(train_loader):
@@ -102,6 +117,14 @@ for epoch in range(num_epoch):
     epoch_start_time = time.time()
     train_acc = 0.0
     train_loss = 0.0
+
+    if epoch < 15:
+        lr = 0.004
+    elif epoch < 30:
+        lr = 0.001
+    else:
+        lr = 5E-4
+    adjust_learning_rate(optimizer, lr)
 
     model_best.train()
     for i, data in enumerate(train_val_loader):
