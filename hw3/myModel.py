@@ -39,7 +39,7 @@ class Classifier(nn.Module):
             # nn.ReLU(),
             nn.MaxPool2d(2, 2, 0),      # [64, 64, 64]
 
-            nn.Dropout(0.2),
+            # nn.Dropout(0.2),
 
             nn.Conv2d(64, 128, 3, 1, 1), # [128, 64, 64]
             nn.BatchNorm2d(128),
@@ -48,16 +48,16 @@ class Classifier(nn.Module):
             # nn.ReLU(),
             nn.MaxPool2d(2, 2, 0),      # [128, 32, 32]
 
-            nn.Dropout(0.2),
+            # nn.Dropout(0.2),
 
             nn.Conv2d(128, 256, 3, 1, 1), # [256, 32, 32]
-            nn.BatchNorm2d(256)clear,
+            nn.BatchNorm2d(256),
             nn.ReLU(),
             # nn.Conv2d(256, 256, 3, 1, 1), # [256, 32, 32]
             # nn.ReLU(),
             nn.MaxPool2d(2, 2, 0),      # [256, 16, 16]
 
-            nn.Dropout(0.2),
+            # nn.Dropout(0.2),
 
             nn.Conv2d(256, 512, 3, 1, 1), # [512, 16, 16]
             nn.ReLU(),
@@ -66,7 +66,7 @@ class Classifier(nn.Module):
             nn.BatchNorm2d(512),
             nn.MaxPool2d(2, 2, 0),       # [512, 8, 8]
 
-            nn.Dropout(0.2),
+            # nn.Dropout(0.2),
             
             nn.Conv2d(512, 512, 3, 1, 1), # [512, 8, 8]
             nn.BatchNorm2d(512),
@@ -74,16 +74,22 @@ class Classifier(nn.Module):
             nn.MaxPool2d(2, 2, 0),       # [512, 4, 4]
         )
         self.fc = nn.Sequential(
-            nn.Linear(512*4*4, 1024),
+            # nn.Linear(512*4*4, 1024),
+            nn.Linear(512*4*4, 5120),
             nn.ReLU(),
             nn.Dropout(0.2),
 
-            nn.Linear(1024, 256),
+            nn.Linear(5120, 2048),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+
+            nn.Linear(2048, 512),
+            # nn.Linear(1024, 256),
             # nn.Linear(1024, 512),
             nn.ReLU(),
-            nn.Dropout(0.2),
+            nn.Dropout(0.5),
 
-            nn.Linear(256, 11),
+            nn.Linear(512, 11),
             # nn.Linear(512, 11),
             # nn.Softmax(dim=1)
         )

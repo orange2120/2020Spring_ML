@@ -1,17 +1,17 @@
 import sys, os
 import numpy as np
 import matplotlib.pyplot as plt
-import cv2
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
+import torchvision.models as models
 import pandas as pd
 from torch.utils.data import DataLoader, Dataset
 import time
 from myModel import Classifier, ImgDataset
 
-num_epoch = 120
-batch_size = 84
+num_epoch = 60
+batch_size = 128
 
 def adjust_learning_rate(optimizer, lr):
     for param_group in optimizer.param_groups:
@@ -27,9 +27,9 @@ val_y = loadfile['val_y']
 #training 時做 data augmentation
 train_transform = transforms.Compose([
     transforms.ToPILImage(),
-    transforms.RandomHorizontalFlip(), #隨機將圖片水平翻轉
-    transforms.RandomRotation(15), #隨機旋轉圖片
-    transforms.ToTensor(), #將圖片轉成 Tensor，並把數值normalize到[0,1](data normalization)
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(15),
+    transforms.ToTensor(),
 ])
 #testing 時不需做 data augmentation
 test_transform = transforms.Compose([
@@ -42,7 +42,9 @@ val_set = ImgDataset(val_x, val_y, test_transform)
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False)
 
-model = Classifier().cuda()
+resnet18 = models.resnet50(pretrained=False)
+
+model = resnet18.cuda()
 loss = nn.CrossEntropyLoss() # 因為是 classification task，所以 loss 使用 CrossEntropyLoss
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001) # optimizer 使用 Adam
 
@@ -109,7 +111,7 @@ train_val_loader = DataLoader(train_val_set, batch_size=batch_size, shuffle=True
 train_val_loss_his = []
 train_val_acc_his = []
 
-model_best = Classifier().cuda()
+model_best = resnet18.cuda()
 loss = nn.CrossEntropyLoss() # 因為是 classification task，所以 loss 使用 CrossEntropyLoss
 optimizer = torch.optim.Adam(model_best.parameters(), lr=0.001) # optimizer 使用 Adam
 
@@ -148,7 +150,7 @@ for epoch in range(num_epoch):
 
 timestr = time.strftime("%Y%m%d-%H-%M-%S")
 
-torch.save(model_best, './data/model_' + timestr + '.pkl') # save model
+torch.save(model_best, './data/model_res_' + timestr + '.pkl') # save model
 
 # Plot
 # Loss curve
@@ -157,7 +159,7 @@ plt.plot(val_loss_his)
 plt.plot(train_val_loss_his)
 plt.title('Loss')
 plt.legend(['train', 'val', 'train-val'])
-plt.savefig('./figure/loss_' + timestr + '.png')
+plt.savefig('./figure/loss_res_' + timestr + '.png')
 # plt.show()
 plt.clf()
 
@@ -167,6 +169,6 @@ plt.plot(val_acc_his)
 plt.plot(train_val_acc_his)
 plt.title('Accuracy')
 plt.legend(['train', 'val', 'train-val'])
-plt.savefig('./figure/accuracy_' + timestr + '.png')
+plt.savefig('./figure/accuracy_res_' + timestr + '.png')
 # plt.show()
 plt.clf()
