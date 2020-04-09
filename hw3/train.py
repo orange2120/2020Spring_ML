@@ -10,7 +10,8 @@ from torch.utils.data import DataLoader, Dataset
 import time
 from myModel import Classifier, ImgDataset
 
-num_epoch = 120
+num_epoch = 150
+num_all_epoch = 150 
 batch_size = 84
 
 def adjust_learning_rate(optimizer, lr):
@@ -113,7 +114,7 @@ model_best = Classifier().cuda()
 loss = nn.CrossEntropyLoss() # 因為是 classification task，所以 loss 使用 CrossEntropyLoss
 optimizer = torch.optim.Adam(model_best.parameters(), lr=0.001) # optimizer 使用 Adam
 
-for epoch in range(num_epoch):
+for epoch in range(num_all_epoch):
     epoch_start_time = time.time()
     train_acc = 0.0
     train_loss = 0.0
