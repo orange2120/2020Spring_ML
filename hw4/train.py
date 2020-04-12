@@ -1,13 +1,12 @@
-# this is for filtering the warnings
-import warnings
-warnings.filterwarnings('ignore')
-
 # train.py
 # 這個block是用來訓練模型的
 import torch
 from torch import nn
 import torch.optim as optim
 import torch.nn.functional as F
+import matplotlib.pyplot as plt
+import time
+from utils import evaluation
 
 def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
     total = sum(p.numel() for p in model.parameters())
@@ -19,6 +18,14 @@ def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
     v_batch = len(valid) 
     optimizer = optim.Adam(model.parameters(), lr=lr) # 將模型的參數給optimizer，並給予適當的learning rate
     total_loss, total_acc, best_acc = 0, 0, 0
+
+    train_loss_his = []
+    val_loss_his = []
+    train_acc_his = []
+    val_acc_his = []
+    
+    timestr = time.strftime("%Y%m%d-%H-%M-%S")
+
     for epoch in range(n_epoch):
         total_loss, total_acc = 0, 0
         # 這段做training
@@ -34,8 +41,12 @@ def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
             correct = evaluation(outputs, labels) # 計算此時模型的training accuracy
             total_acc += (correct / batch_size)
             total_loss += loss.item()
+
             print('[ Epoch{}: {}/{} ] loss:{:.3f} acc:{:.3f} '.format(
             	epoch+1, i+1, t_batch, loss.item(), correct*100/batch_size), end='\r')
+        
+        train_acc_his.append(total_acc/t_batch*100)
+        train_loss_his.append(total_loss/t_batch)
         print('\nTrain | Loss:{:.5f} Acc: {:.3f}'.format(total_loss/t_batch, total_acc/t_batch*100))
 
         # 這段做validation
@@ -52,12 +63,34 @@ def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
                 total_acc += (correct / batch_size)
                 total_loss += loss.item()
 
+
+            val_acc_his.append(total_acc/v_batch*100)
+            val_loss_his.append(total_loss/v_batch)
             print("Valid | Loss:{:.5f} Acc: {:.3f} ".format(total_loss/v_batch, total_acc/v_batch*100))
             if total_acc > best_acc:
                 # 如果validation的結果優於之前所有的結果，就把當下的模型存下來以備之後做預測時使用
                 best_acc = total_acc
+
                 #torch.save(model, "{}/val_acc_{:.3f}.model".format(model_dir,total_acc/v_batch*100))
-                torch.save(model, "{}/ckpt.model".format(model_dir))
+                torch.save(model, "{}/ckpt_{}.model".format(model_dir, timestr))
                 print('saving model with acc {:.3f}'.format(total_acc/v_batch*100))
         print('-----------------------------------------------')
         model.train() # 將model的模式設為train，這樣optimizer就可以更新model的參數（因為剛剛轉成eval模式）
+    # Plot
+    # Loss curve
+    plt.plot(train_loss_his)
+    plt.plot(val_acc_his)
+    plt.title('Loss')
+    plt.legend(['train', 'val'])
+    plt.savefig('./data/figure/loss_{}.png'.format(timestr))
+    # plt.show()
+    plt.clf()
+
+    # Accuracy curve
+    plt.plot(train_acc_his)
+    plt.plot(val_acc_his)
+    plt.title('Accuracy')
+    plt.legend(['train', 'val'])
+    plt.savefig('./data/figure/accuracy_{}.png'.format(timestr))
+    # plt.show()
+    plt.clf()

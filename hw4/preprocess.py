@@ -1,5 +1,6 @@
 # preprocess.py
 # 這個block用來做data的預處理
+import torch
 from torch import nn
 from gensim.models import Word2Vec
 

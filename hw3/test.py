@@ -42,9 +42,9 @@ with torch.no_grad():
 
 output_name = os.path.splitext(os.path.basename(model_path))[0]
 
-with open('./output/predict_' + output_name + '.csv', 'w') as f:
+with open('./output/predict_{}.csv'.format(output_name), 'w') as f:
     f.write('Id,Category\n')
     for i, y in  enumerate(prediction):
         f.write('{},{}\n'.format(i, y))
 
-print('predict file: predict_' + output_name + '.csv generated.')
+print('predict file: predict_{}.csv generated.'.format(output_name))
