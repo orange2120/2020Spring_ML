@@ -15,6 +15,7 @@ import torchvision.transforms as transforms
 from skimage.segmentation import slic
 from lime import lime_image
 from pdb import set_trace
+from model import Classifier
 
 """## Argument parsing"""
 
@@ -23,47 +24,6 @@ args = {
       'dataset_dir': './food-11/'
 }
 args = argparse.Namespace(**args)
-
-"""## Model definition and checkpoint loading"""
-
-# 這是助教的示範 model，寫作業時一樣要換成自己的
-class Classifier(nn.Module):
-  def __init__(self):
-    super(Classifier, self).__init__()
-
-    def building_block(indim, outdim):
-      return [
-        nn.Conv2d(indim, outdim, 3, 1, 1),
-        nn.BatchNorm2d(outdim),
-        nn.ReLU(),
-      ]
-    def stack_blocks(indim, outdim, block_num):
-      layers = building_block(indim, outdim)
-      for i in range(block_num - 1):
-        layers += building_block(outdim, outdim)
-      layers.append(nn.MaxPool2d(2, 2, 0))
-      return layers
-
-    cnn_list = []
-    cnn_list += stack_blocks(3, 128, 3)
-    cnn_list += stack_blocks(128, 128, 3)
-    cnn_list += stack_blocks(128, 256, 3)
-    cnn_list += stack_blocks(256, 512, 1)
-    cnn_list += stack_blocks(512, 512, 1)
-    self.cnn = nn.Sequential( * cnn_list)
-
-    dnn_list = [
-      nn.Linear(512 * 4 * 4, 1024),
-      nn.ReLU(),
-      nn.Dropout(p = 0.3),
-      nn.Linear(1024, 11),
-    ]
-    self.fc = nn.Sequential( * dnn_list)
-
-  def forward(self, x):
-    out = self.cnn(x)
-    out = out.view(out.size()[0], -1)
-    return self.fc(out)
 
 model = Classifier().cuda()
 checkpoint = torch.load(args.ckptpath)
@@ -75,6 +35,7 @@ model.load_state_dict(checkpoint['model_state_dict'])
 # 助教 training 時定義的 dataset
 # 因為 training 的時候助教有使用底下那些 transforms，所以 testing 時也要讓 test data 使用同樣的 transform
 # dataset 這部分的 code 基本上不應該出現在你的作業裡，你應該使用自己當初 train HW3 時的 preprocessing
+'''
 class FoodDataset(Dataset):
     def __init__(self, paths, labels, mode):
         # mode: 'train' or 'eval'
@@ -113,7 +74,7 @@ class FoodDataset(Dataset):
           images.append(image)
           labels.append(label)
         return torch.stack(images), torch.tensor(labels)
-
+'''
 # 給予 data 的路徑，回傳每一張圖片的「路徑」和「class」
 def get_paths_labels(path):
     imgnames = os.listdir(path)
@@ -198,7 +159,7 @@ for row, target in enumerate([images, saliencies]):
     # - 第 1 個 dimension 為原本 img 的第 2 個 dimension，也就是 width
     # - 第 2 個 dimension 為原本 img 的第 0 個 dimension，也就是 channels
 
-plt.savefig('saliency_map.png')
+plt.savefig('./output/saliency_map.png')
 # 從第二張圖片的 saliency，我們可以發現 model 有認出蛋黃的位置
 # 從第三、四張圖片的 saliency，雖然不知道 model 細部用食物的哪個位置判斷，但可以發現 model 找出了食物的大致輪廓
 
@@ -218,9 +179,6 @@ loss.backward()
 但這樣的寫法太不漂亮了，更改了 forward 的 output 可能會讓其他部分的 code 要跟著改動
 因此 pytorch 提供了方便的 solution: **hook**，以下我們會再介紹。
 """
-
-def normalize(image):
-  return (image - image.min()) / (image.max() - image.min())
 
 layer_activations = None
 def filter_explaination(x, model, cnnid, filterid, iteration=100, lr=1):
@@ -343,6 +301,6 @@ for idx, (image, label) in enumerate(zip(images.permute(0, 2, 3, 1).numpy(), lab
 
     axs[idx].imshow(lime_img)
 
-plt.savefig('lime.png')
+plt.savefig('./output/lime.png')
 # 從以下前三章圖可以看到，model 有認出食物的位置，並以該位置為主要的判斷依據
 # 唯一例外是第四張圖，看起來 model 似乎比較喜歡直接去認「碗」的形狀，來判斷該圖中屬於 soup 這個 class

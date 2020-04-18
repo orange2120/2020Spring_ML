@@ -15,8 +15,9 @@ def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
     model.train() # 將model的模式設為train，這樣optimizer就可以更新model的參數
     criterion = nn.BCELoss() # 定義損失函數，這裡我們使用binary cross entropy loss
     t_batch = len(train) 
-    v_batch = len(valid) 
-    optimizer = optim.Adam(model.parameters(), lr=lr) # 將模型的參數給optimizer，並給予適當的learning rate
+    v_batch = len(valid)
+    # optimizer = optim.Adam(model.parameters(), lr=lr)
+    optimizer = optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999), eps=1e-08) # 將模型的參數給optimizer，並給予適當的learning rate
     total_loss, total_acc, best_acc = 0, 0, 0
 
     train_loss_his = []
@@ -37,6 +38,9 @@ def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
             outputs = outputs.squeeze() # 去掉最外面的dimension，好讓outputs可以餵進criterion()
             loss = criterion(outputs, labels) # 計算此時模型的training loss
             loss.backward() # 算loss的gradient
+            
+            nn.utils.clip_grad_norm_(model.parameters(), 0.5, norm_type=2) # added
+            
             optimizer.step() # 更新訓練模型的參數
             correct = evaluation(outputs, labels) # 計算此時模型的training accuracy
             total_acc += (correct / batch_size)
@@ -79,7 +83,7 @@ def training(batch_size, n_epoch, lr, model_dir, train, valid, model, device):
     # Plot
     # Loss curve
     plt.plot(train_loss_his)
-    plt.plot(val_acc_his)
+    plt.plot(val_loss_his)
     plt.title('Loss')
     plt.legend(['train', 'val'])
     plt.savefig('./data/figure/loss_{}.png'.format(timestr))

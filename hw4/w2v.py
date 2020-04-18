@@ -29,4 +29,3 @@ if __name__ == "__main__":
     
     print("saving model ...")
     model.save(os.path.join(path_prefix, 'model/w2v_all.model'))
-    # model.save(os.path.join(path_prefix, 'w2v_all.model'))

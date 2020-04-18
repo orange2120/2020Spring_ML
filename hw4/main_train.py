@@ -15,7 +15,7 @@ path_prefix = './data/'
 
 # 要不要固定embedding、batch大小、要訓練幾個epoch、learning rate的值、model的資料夾路徑
 fix_embedding = True # fix embedding during training
-batch_size = 128
+batch_size = 256
 epoch = 20
 lr = 0.001
 
@@ -32,7 +32,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_dir = os.path.join(path_prefix, 'model/') # model directory for checkpoint model
 
 # 製作一個model的對象
-model = m.LSTM_Net(embedding, embedding_dim=250, hidden_dim=150, num_layers=3, dropout=0.5, fix_embedding=fix_embedding)
+# model = m.LSTM_Net(embedding, embedding_dim=250, hidden_dim=150, num_layers=1, dropout=0.5, fix_embedding=fix_embedding)
+model = m.LSTM_Net(embedding, embedding_dim=250, hidden_dim=200, num_layers=4, dropout=0.5, fix_embedding=fix_embedding)
 model = model.to(device) # device為"cuda"，model使用GPU來訓練(餵進去的inputs也需要是cuda tensor)
 
 # 把data做成dataset供dataloader取用

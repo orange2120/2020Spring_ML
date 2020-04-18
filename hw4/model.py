@@ -14,9 +14,11 @@ class LSTM_Net(nn.Module):
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
         self.dropout = dropout
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, num_layers=num_layers, batch_first=True)
+        # self.lstm = nn.LSTM(embedding_dim, hidden_dim, num_layers=num_layers, batch_first=True)
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, num_layers=num_layers, batch_first=True, bidirectional=True)
+        # self.fc = nn.Linear(hidden_dim * 2, num_classes)  # 2 for bidirection
         self.classifier = nn.Sequential( nn.Dropout(dropout),
-                                         nn.Linear(hidden_dim, 1),
+                                         nn.Linear(hidden_dim * 2, 1),
                                          nn.Sigmoid() )
     def forward(self, inputs):
         inputs = self.embedding(inputs)

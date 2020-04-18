@@ -5,7 +5,8 @@ from preprocess import Preprocess
 import utils as u
 
 # 定義句子長度
-sen_len = 20
+# sen_len = 20
+sen_len = 40
 
 path_prefix = './data/'
 

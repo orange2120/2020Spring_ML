@@ -9,7 +9,7 @@ from data import TwitterDataset
 from test import testing
 import utils as u
 
-sen_len = 20
+sen_len = 40
 batch_size = 128
 
 model_path = './data/ckpt.model'
