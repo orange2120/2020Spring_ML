@@ -1,15 +1,15 @@
 import csv
 import numpy as np
 
-out_path = './output/pred_vote_141517.csv'
+out_path = './output/pred_vote_151722.csv'
 
 # input csv file folder
 csv_folder = './output/'
 # csv filenames used to be voted 
 csv_list = [
-'predict_ckpt_20200418-14-54-31.csv',
 'predict_ckpt_20200418-15-45-28.csv',
-'predict_ckpt_20200418-17-04-42.csv'
+'predict_ckpt_20200418-17-04-42.csv',
+'predict_ckpt_20200418-22-58-38.csv'
 ]
 
 num_classes = 2
