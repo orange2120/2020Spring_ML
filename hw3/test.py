@@ -1,7 +1,5 @@
 import sys, os
 import numpy as np
-import matplotlib.pyplot as plt
-import cv2
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
