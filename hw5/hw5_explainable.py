@@ -20,14 +20,14 @@ from model import Classifier
 """## Argument parsing"""
 
 args = {
-      'ckptpath': './checkpoint.pth',
-      'dataset_dir': './food-11/'
+      'ckptpath': './data/checkpoint.pth',
+      'dataset_dir': './data/food-11/'
 }
 args = argparse.Namespace(**args)
 
 model = Classifier().cuda()
 checkpoint = torch.load(args.ckptpath)
-model.load_state_dict(checkpoint['model_state_dict'])
+model.model_state_dict(checkpoint['model_state_dict'])
 # 最好額外做一下 inference 確認 test accuracy 沒有錯。
 
 """## Dataset definition and creation"""
@@ -35,7 +35,7 @@ model.load_state_dict(checkpoint['model_state_dict'])
 # 助教 training 時定義的 dataset
 # 因為 training 的時候助教有使用底下那些 transforms，所以 testing 時也要讓 test data 使用同樣的 transform
 # dataset 這部分的 code 基本上不應該出現在你的作業裡，你應該使用自己當初 train HW3 時的 preprocessing
-'''
+
 class FoodDataset(Dataset):
     def __init__(self, paths, labels, mode):
         # mode: 'train' or 'eval'
@@ -74,7 +74,7 @@ class FoodDataset(Dataset):
           images.append(image)
           labels.append(label)
         return torch.stack(images), torch.tensor(labels)
-'''
+
 # 給予 data 的路徑，回傳每一張圖片的「路徑」和「class」
 def get_paths_labels(path):
     imgnames = os.listdir(path)

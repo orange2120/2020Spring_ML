@@ -4,3 +4,9 @@
 Applying linear regression to estimate PM2.5 index.
 
 ## HW2 Classification
+
+## HW3 CNN
+
+## HW4 RNN
+
+## HW5 CNN Explaination
