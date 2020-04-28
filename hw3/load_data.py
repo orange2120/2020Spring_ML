@@ -8,6 +8,10 @@ from torch.utils.data import DataLoader, Dataset
 workspace_dir = '../data/food-11'
 output_dir = '../data/food-11/data.npz'
 
+if len(sys.argv) == 2:
+  workspace_dir = sys.argv[1]
+  output_dir = sys.argv[1] + '/data.npz'
+
 def readfile(path, label):
     # label 是一個 boolean variable，代表需不需要回傳 y 值
     image_dir = sorted(os.listdir(path))
@@ -33,4 +37,4 @@ test_x = readfile(os.path.join(workspace_dir, "testing"), False)
 print("Size of Testing data = {}".format(len(test_x)))
 print('File loaded.')
 
-np.savez(output_dir, tr_x=train_x, tr_y=train_y, val_x=val_x, val_y=val_y, te_x=test_x)
+# np.savez(output_dir, tr_x=train_x, tr_y=train_y, val_x=val_x, val_y=val_y, te_x=test_x)

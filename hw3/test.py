@@ -9,12 +9,19 @@ from myModel import Classifier, ImgDataset
 
 batch_size = 128
 
+dataset_path = '../data/food-11/data.npz'
 model_path = './data/model.pkl'
+output_path = './output/predict.csv'
 
-if len(sys.argv) == 2:
-    model_path = sys.argv[1]
+if len(sys.argv) == 3:
+    model_path = sys.argv[1] + '/model.pkl'
+    output_path = sys.argv[2]
 
-loadfile = np.load('../data/food-11/data.npz')
+elif len(sys.argv) == 2:
+    model_path = sys.argv[1] 
+    output_path = os.path.splitext(os.path.basename(model_path))[0]
+
+loadfile = np.load(dataset_path)
 test_x = loadfile['te_x']
 
 model_best = torch.load(model_path)
@@ -37,12 +44,9 @@ with torch.no_grad():
             prediction.append(y)
 
 #將結果寫入 csv 檔
-
-output_name = os.path.splitext(os.path.basename(model_path))[0]
-
-with open('./output/predict_{}.csv'.format(output_name), 'w') as f:
+with open('./output/predict_{}.csv'.format(output_path), 'w') as f:
     f.write('Id,Category\n')
     for i, y in  enumerate(prediction):
         f.write('{},{}\n'.format(i, y))
 
-print('predict file: predict_{}.csv generated.'.format(output_name))
+print('predict file: predict_{}.csv generated.'.format(output_path))

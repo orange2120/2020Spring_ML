@@ -13,16 +13,20 @@ sen_len = 40
 batch_size = 128
 
 model_path = './data/ckpt.model'
-
 path_prefix = './data/'
 output_prefix = './output/'
 
-if len(sys.argv) == 2:
-    model_path = sys.argv[1]
-
 testing_data = os.path.join(path_prefix, 'testing_data.txt')
-model_dir = os.path.join(path_prefix, 'model/') # model directory for checkpoint model
+output_path = os.path.join(path_prefix, 'model/') # model directory for checkpoint model
 w2v_path = os.path.join(path_prefix, 'model/w2v_all.model') # 處理word to vec model的路徑
+output_path = os.path.join(output_prefix, 'predict_{}.csv'.format(os.path.splitext(os.path.basename(model_path))[0]))
+
+if len(sys.argv) == 3:
+    testing_data = sys.argv[1]
+    output_path = sys.argv[2]
+
+elif len(sys.argv) == 2:
+    model_path = sys.argv[1]
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -44,8 +48,5 @@ outputs = testing(batch_size, test_loader, model, device)
 # 寫到csv檔案供上傳kaggle
 tmp = pd.DataFrame({"id":[str(i) for i in range(len(test_x))],"label":outputs})
 print("save csv ...")
-
-output_name = os.path.splitext(os.path.basename(model_path))[0]
-
-tmp.to_csv(os.path.join(output_prefix, 'predict_{}.csv'.format(output_name)), index=False)
+tmp.to_csv(output_path, index=False)
 print("Finish Predicting")

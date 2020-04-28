@@ -1,4 +1,4 @@
-
+# main_preprocess.py
 import os, sys
 import torch
 from preprocess import Preprocess
@@ -15,6 +15,9 @@ train_with_label = os.path.join(path_prefix, 'training_label.txt')
 train_no_label = os.path.join(path_prefix, 'training_nolabel.txt')
 w2v_path = os.path.join(path_prefix, 'model/w2v_all.model') # 處理word to vec model的路徑
 
+if len(sys.argv) == 3:
+    train_with_label = sys.argv[1]
+    train_no_label = sys.argv[2]
 
 print("loading data ...") # 把'training_label.txt'跟'training_nolabel.txt'讀進來
 train_x, y = u.load_training_data(train_with_label)

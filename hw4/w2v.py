@@ -1,7 +1,7 @@
 # w2v.py
 # 這個block是用來訓練word to vector 的 word embedding
 # 注意！這個block在訓練word to vector時是用cpu，可能要花到10分鐘以上
-import os
+import sys, os
 import numpy as np
 import pandas as pd
 import argparse
@@ -9,6 +9,7 @@ from gensim.models import word2vec
 import utils as u
 
 path_prefix = './data/'
+output_model_path = os.path.join(path_prefix, 'model/w2v_all.model')
 
 def train_word2vec(x):
     # 訓練word to vector 的 word embedding
@@ -17,8 +18,12 @@ def train_word2vec(x):
 
 if __name__ == "__main__":
     print("loading training data ...")
-    train_x, y = u.load_training_data(os.path.join(path_prefix, 'training_label.txt'))
-    train_x_no_label = u.load_training_data(os.path.join(path_prefix, 'training_nolabel.txt'))
+    if len(sys.argv) == 3:
+        train_x, y = u.load_training_data(sys.argv[1])
+        train_x_no_label = u.load_training_data(sys.argv[2])
+    else:
+        train_x, y = u.load_training_data(os.path.join(path_prefix, 'training_label.txt'))
+        train_x_no_label = u.load_training_data(os.path.join(path_prefix, 'training_nolabel.txt'))
 
     print("loading testing data ...")
     test_x = u.load_testing_data(os.path.join(path_prefix, 'testing_data.txt'))
@@ -28,4 +33,4 @@ if __name__ == "__main__":
     model = train_word2vec(train_x + test_x)
     
     print("saving model ...")
-    model.save(os.path.join(path_prefix, 'model/w2v_all.model'))
+    model.save(output_model_path)

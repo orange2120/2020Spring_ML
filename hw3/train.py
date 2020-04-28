@@ -18,8 +18,12 @@ def adjust_learning_rate(optimizer, lr):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
+dataset_path = '../data/food-11/data.npz'
 
-loadfile = np.load('../data/food-11/data.npz')
+if len(sys.argv) == 2:
+  dataset_path = sys.argv[1] + '/data.npz'
+
+loadfile = np.load(dataset_path)
 train_x = loadfile['tr_x']
 train_y = loadfile['tr_y']
 val_x = loadfile['val_x']
