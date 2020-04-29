@@ -41,11 +41,11 @@ def plot_confusion_matrix(cm, classes,
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    plt.savefig('./figure/confusion_matrix.png')
+    plt.savefig('./figure/confusion_matrix_{}.png'.format(os.path.splitext(os.path.basename(model_path))[0]))
     plt.show()
 
 
-model_path = './data/model_20200410-02-35-27.pkl'
+model_path = './data/model_noval_20200429-13-14-37.pkl'
 dataset_path = '../data/food-11/data.npz'
 
 loadfile = np.load(dataset_path)
@@ -90,4 +90,3 @@ names = ('Bread', 'Dairy product', 'Dessert', 'Egg', 'Fried food'
 
 plt.figure(figsize=(10,10))
 plot_confusion_matrix(cm, names)
-

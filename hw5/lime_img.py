@@ -43,7 +43,7 @@ for idx, (image, label) in enumerate(zip(images.permute(0, 2, 3, 1).numpy(), lab
     # lime 這個套件要吃 numpy array
 
     explainer = lime_image.LimeImageExplainer()
-    explaination = explainer.explain_instance(image=x, classifier_fn=predict, segmentation_fn=segmentation)
+    explaination = explainer.explain_instance(image=x, classifier_fn=predict, segmentation_fn=segmentation, top_labels=11)
     # 基本上只要提供給 lime explainer 兩個關鍵的 function，事情就結束了
     # classifier_fn 定義圖片如何經過 model 得到 prediction
     # segmentation_fn 定義如何把圖片做 segmentation
@@ -59,6 +59,7 @@ for idx, (image, label) in enumerate(zip(images.permute(0, 2, 3, 1).numpy(), lab
 
     axs[idx].imshow(lime_img)
 
+plt.title('lime')
 plt.savefig('./output/lime.png')
 # 從以下前三章圖可以看到，model 有認出食物的位置，並以該位置為主要的判斷依據
 # 唯一例外是第四張圖，看起來 model 似乎比較喜歡直接去認「碗」的形狀，來判斷該圖中屬於 soup 這個 class
