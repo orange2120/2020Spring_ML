@@ -106,10 +106,9 @@ for epoch in range(num_epoch):
             (epoch + 1, num_epoch, time.time()-epoch_start_time, \
              train_acc/train_set.__len__(), train_loss/train_set.__len__(), val_acc/val_set.__len__(), val_loss/val_set.__len__()))
 
-timestr = time.strftime("%Y%m%d-%H-%M-%S")
+# timestr = time.strftime("%Y%m%d-%H-%M-%S")
+# torch.save(model, './data/model_no_val_{}.pkl'.format(timestr)) # save model
 
-torch.save(model, './data/model_' + timestr + '.pkl') # save model
-'''
 train_val_x = np.concatenate((train_x, val_x), axis=0)
 train_val_y = np.concatenate((train_y, val_y), axis=0)
 train_val_set = ImgDataset(train_val_x, train_val_y, train_transform)
@@ -158,7 +157,7 @@ for epoch in range(num_all_epoch):
 timestr = time.strftime("%Y%m%d-%H-%M-%S")
 
 torch.save(model_best, './data/model_{}.pkl'.format(timestr)) # save model
-'''
+
 # Plot
 # Loss curve
 plt.plot(train_loss_his)
@@ -166,7 +165,7 @@ plt.plot(val_loss_his)
 # plt.plot(train_val_loss_his)
 plt.title('Loss')
 plt.legend(['train', 'val', 'train-val'])
-plt.savefig('./figure/loss_' + timestr + '.png')
+plt.savefig('./figure/loss_{}.png'.format(timestr))
 # plt.show()
 plt.clf()
 
@@ -176,6 +175,6 @@ plt.plot(val_acc_his)
 # plt.plot(train_val_acc_his)
 plt.title('Accuracy')
 plt.legend(['train', 'val', 'train-val'])
-plt.savefig('./figure/accuracy_' + timestr + '.png')
+plt.savefig('./figure/accuracy_{}.png'.format(timestr))
 # plt.show()
 plt.clf()

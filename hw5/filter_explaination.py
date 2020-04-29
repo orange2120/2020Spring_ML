@@ -4,6 +4,7 @@ from PIL import Image
 import torch
 from torch.optim import Adam
 import matplotlib.pyplot as plt
+import time
 
 """## Filter explaination
 
@@ -22,7 +23,16 @@ loss.backward()
 因此 pytorch 提供了方便的 solution: **hook**，以下我們會再介紹。
 """
 
-model_path = './data/model/model_20200410-02-35-27.pkl'
+# img_indices = [83, 4218, 4707, 8598]
+img_indices = [100, 1245, 4702, 8300]
+
+cnn_id = 5
+filter_id = 2
+
+model_path = './data/model/model_20200407-20-03-05.pkl'
+
+if len(sys.argv) == 2:
+  model_path = sys.argv[1]
 
 model = torch.load(model_path)
 train_set = torch.load('./data/train_set.npy')
@@ -84,9 +94,9 @@ def filter_explaination(x, model, cnnid, filterid, iteration=100, lr=1):
 
   return filter_activations, filter_visualization
 
-img_indices = [83, 4218, 4707, 8598]
+
 images, labels = train_set.getbatch(img_indices)
-filter_activations, filter_visualization = filter_explaination(images, model, cnnid=15, filterid=0, iteration=1000, lr=0.1)
+filter_activations, filter_visualization = filter_explaination(images, model, cnnid=cnn_id, filterid=filter_id, iteration=1000, lr=0.1)
 
 # 畫出 filter visualization
 plt.figure(figsize=(15, 8))
@@ -101,5 +111,8 @@ for i, img in enumerate(images):
   axs[0][i].imshow(img.permute(1, 2, 0))
 for i, img in enumerate(filter_activations):
   axs[1][i].imshow(normalize(img))
-plt.savefig('./output/filter_activation.png')
+
+timestr = time.strftime("%Y%m%d-%H-%M-%S")
+plt.savefig('./output/filter_activation_{}.png'.format(timestr))
+print('done.')
 # 從下面四張圖可以看到，activate 的區域對應到一些物品的邊界，尤其是顏色對比較深的邊界

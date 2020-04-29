@@ -11,9 +11,12 @@ from skimage.segmentation import slic
 Lime 的部分因為有現成的套件可以使用，因此下方直接 demo 如何使用該套件
 其實非常的簡單，只需要 implement 兩個 function 即可
 """
+img_indices = [83, 4218, 4707, 8598]
 
-# model_path = './data/model/model_20200410-02-35-27.pkl'
-model_path = './data/model/model_20200402-22-21-42.pkl'
+model_path = './data/model/model_20200407-20-03-05.pkl'
+# model_path = './data/model/model_20200402-22-21-42.pkl'
+if len(sys.argv) == 2:
+    model_path = sys.argv[1]
 
 model = torch.load(model_path)
 train_set = torch.load('./data/train_set.npy')
@@ -33,7 +36,6 @@ def segmentation(input):
     # 利用 skimage 提供的 segmentation 將圖片分成 100 塊
     return slic(input, n_segments=100, compactness=1, sigma=1)
 
-img_indices = [83, 4218, 4707, 8598]
 images, labels = train_set.getbatch(img_indices)
 fig, axs = plt.subplots(1, 4, figsize=(15, 8))
 np.random.seed(16)
@@ -60,6 +62,6 @@ for idx, (image, label) in enumerate(zip(images.permute(0, 2, 3, 1).numpy(), lab
     axs[idx].imshow(lime_img)
 
 plt.title('lime')
-plt.savefig('./output/lime.png')
+plt.savefig('./output/lime_{}.png'.format(os.path.splitext(os.path.basename(model_path))[0]))
 # 從以下前三章圖可以看到，model 有認出食物的位置，並以該位置為主要的判斷依據
 # 唯一例外是第四張圖，看起來 model 似乎比較喜歡直接去認「碗」的形狀，來判斷該圖中屬於 soup 這個 class

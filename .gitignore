@@ -4,6 +4,7 @@ data/*
 hw2/data/
 hw3/data/
 hw4/data/
+hw6/output/
 
 # python save files
 *.npz

@@ -6,6 +6,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from myModel import Classifier
 from dataset import FoodDataset
+import time
 
 """### Saliency map
 
@@ -26,8 +27,11 @@ from dataset import FoodDataset
 而這個 backward，pytorch 預設是計算 **loss 對 model parameter** 的偏微分值
 因此我們只需要用一行 code 額外告知 pytorch，**image** 也是要算偏微分的對象之一
 """
+img_indices = [10, 100, 1245, 4702, 8300]
 
-model_path = './data/model/model_20200410-02-35-27.pkl'
+model_path = './data/model/model_20200407-20-03-05.pkl'
+if len(sys.argv) == 2:
+  model_path = sys.argv[1]
 
 model = torch.load(model_path)
 train_set = torch.load('./data/train_set.npy')
@@ -60,7 +64,7 @@ def compute_saliency_maps(x, y, model):
   return saliencies
 
 # 指定想要一起 visualize 的圖片 indices
-img_indices = [83, 4218, 4707, 8598]
+# img_indices = [83, 4218, 4707, 8598]
 images, labels = train_set.getbatch(img_indices)
 saliencies = compute_saliency_maps(images, labels, model)
 
@@ -78,6 +82,8 @@ for row, target in enumerate([images, saliencies]):
     # - 第 1 個 dimension 為原本 img 的第 2 個 dimension，也就是 width
     # - 第 2 個 dimension 為原本 img 的第 0 個 dimension，也就是 channels
 
-plt.savefig('./output/saliency_map.png')
+timestr = time.strftime("%Y%m%d-%H-%M-%S")
+plt.savefig('./output/saliency_map_{}.png'.format(timestr))
+print('done.')
 # 從第二張圖片的 saliency，我們可以發現 model 有認出蛋黃的位置
 # 從第三、四張圖片的 saliency，雖然不知道 model 細部用食物的哪個位置判斷，但可以發現 model 找出了食物的大致輪廓
