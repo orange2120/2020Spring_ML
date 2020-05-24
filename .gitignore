@@ -2,7 +2,6 @@ __pycache__/
 */log/
 data/*
 hw2/data/
-hw3/data/
 hw4/data/
 hw6/output/
 
@@ -13,3 +12,5 @@ hw6/output/
 
 # model files
 *.h5
+
+.vscode/

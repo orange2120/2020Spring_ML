@@ -37,4 +37,4 @@ test_x = readfile(os.path.join(workspace_dir, "testing"), False)
 print("Size of Testing data = {}".format(len(test_x)))
 print('File loaded.')
 
-# np.savez(output_dir, tr_x=train_x, tr_y=train_y, val_x=val_x, val_y=val_y, te_x=test_x)
+np.savez(output_dir, tr_x=train_x, tr_y=train_y, val_x=val_x, val_y=val_y, te_x=test_x)
